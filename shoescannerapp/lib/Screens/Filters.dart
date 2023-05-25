@@ -15,6 +15,7 @@ import 'Product.dart';
 class Filters extends StatefulWidget {
   static const String id = 'FiltersPage';
   final String FilterID;
+
   const Filters({
     Key? key,
     required this.FilterID,
@@ -103,168 +104,190 @@ class _filtersState extends State<Filters> {
                           widget.FilterID == 'Women' ||
                           widget.FilterID == 'New')
                         Container(
-                            height: 250,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: data.length,
-                              itemBuilder: (context, index) {
-                                final product = data[index];
-                                if (product.Sp_Filter != widget.FilterID) {
-                                  return SizedBox
-                                      .shrink(); // Skip items with different types
-                                }
-                                return GestureDetector(
-                                  onTap: () {
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => Product(
-                                          productUrl: product.Link.toString(),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  child: Container(
-                                    width: 200,
-                                    margin: const EdgeInsets.only(
-                                      left: 16,
-                                      right: 16,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                      children: [
-                                        Expanded(
-                                          child: Image.network(
-                                            product.Image.toString(),
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                product.Name.toString(),
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 16,
-                                                ),
-                                              ),
-                                              const SizedBox(height: 4),
-                                              Text(
-                                                product.Gender.toString(),
-                                                style: const TextStyle(
-                                                  color: Colors.grey,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                              const SizedBox(height: 4),
-                                              Text(
-                                                '\$ ${product.Full_prices.toString()}',
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 16,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            )),
-                      if (widget.FilterID != 'Kid' &&
-                          widget.FilterID != 'Men' &&
-                          widget.FilterID != 'Women' &&
-                          widget.FilterID != 'New')
-                        SingleChildScrollView(
-                          child: Container(
-                              height: 250,
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: data.length,
-                                itemBuilder: (context, index) {
-                                  final product = data[index];
-                                  if (double.parse(product.Full_prices!) > double.parse(widget.FilterID)) {
-                                    return SizedBox.shrink(); // Skip items with prices greater than or equal to the filter
-                                  }
+                          height: constraints.maxHeight,
+                          child: GridView.builder(
+                            shrinkWrap: true,
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              mainAxisSpacing: 16,
+                              crossAxisSpacing: 16,
+                              childAspectRatio: 0.75,
+                            ),
+                            itemCount: data
+                                .where((product) =>
+                                    product.Sp_Filter == widget.FilterID ||
+                                    product.Gender == widget.FilterID)
+                                .length,
+                            itemBuilder: (context, index) {
+                              final filteredData = data
+                                  .where((product) =>
+                                      product.Sp_Filter == widget.FilterID ||
+                                      product.Gender == widget.FilterID)
+                                  .toList();
+                              final product = filteredData[index];
 
-                                  return GestureDetector(
-                                    onTap: () {
-                                      Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => Product(
-                                            productUrl: product.Link.toString(),
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    child: Container(
-                                      width: 200,
-                                      margin: const EdgeInsets.only(
-                                        left: 16,
-                                        right: 16,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          Expanded(
-                                            child: Image.network(
-                                              product.Image.toString(),
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  product.Name.toString(),
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 16,
-                                                  ),
-                                                ),
-                                                const SizedBox(height: 4),
-                                                Text(
-                                                  product.Gender.toString(),
-                                                  style: const TextStyle(
-                                                    color: Colors.grey,
-                                                    fontSize: 14,
-                                                  ),
-                                                ),
-                                                const SizedBox(height: 4),
-                                                Text(
-                                                  '\$ ${product.Full_prices.toString()}',
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 16,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => Product(
+                                        productUrl: product.Link.toString(),
                                       ),
                                     ),
                                   );
                                 },
-                              )),
+                                child: Container(
+                                  width: 200,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                        child: Image.network(
+                                          product.Image.toString(),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              product.Name.toString(),
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 4),
+                                            Text(
+                                              product.Gender.toString(),
+                                              style: const TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 4),
+                                            Text(
+                                              '\$ ${product.Full_prices.toString()}',
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      if (widget.FilterID != 'Kid' &&
+                          widget.FilterID != 'Men' &&
+                          widget.FilterID != 'Women' &&
+                          widget.FilterID != 'New')
+                        Container(
+                          height: constraints.maxHeight,
+                          child: GridView.builder(
+                            shrinkWrap: true,
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              mainAxisSpacing: 16,
+                              crossAxisSpacing: 16,
+                              childAspectRatio: 0.75,
+                            ),
+                            itemCount: data
+                                .where((product) =>
+                                    double.parse(product.Full_prices!) <=
+                                    double.parse(widget.FilterID))
+                                .length,
+                            itemBuilder: (context, index) {
+                              final filteredData = data
+                                  .where((product) =>
+                                      double.parse(product.Full_prices!) <=
+                                      double.parse(widget.FilterID))
+                                  .toList();
+                              final product = filteredData[index];
+
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => Product(
+                                        productUrl: product.Link.toString(),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  width: 200,
+                                  margin: const EdgeInsets.only(
+                                    left: 16,
+                                    right: 16,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                        child: Image.network(
+                                          product.Image.toString(),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              product.Name.toString(),
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 4),
+                                            Text(
+                                              product.Gender.toString(),
+                                              style: const TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 4),
+                                            Text(
+                                              '\$ ${product.Full_prices.toString()}',
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       const SizedBox(height: 16),
                     ],

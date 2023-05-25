@@ -27,16 +27,15 @@ import 'Login.dart';
 import 'package:flutter/services.dart' as rootbundle;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:uuid/uuid.dart';
 
 class HomePage extends StatefulWidget {
   static const String id = 'Home_Page';
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-
   late String _userId;
   String firstName = '';
   String lastName = '';
@@ -65,13 +64,14 @@ class _HomePageState extends State<HomePage> {
       print(email);
     });
     final userDoc =
-    await FirebaseFirestore.instance.collection('users').doc(email).get();
+        await FirebaseFirestore.instance.collection('users').doc(email).get();
     if (userDoc.exists) {
       setState(() {
         my_role = userDoc.data()?['role'] ?? '';
         print(my_role);
       });
-    };
+    }
+    ;
   }
 
   @override
@@ -158,11 +158,11 @@ class _HomePageState extends State<HomePage> {
                   Navigator.pushNamed(context, HomePage.id);
                 }),
             if (my_role != 'User')
-            ListTile(
-                title: Text('User Page'),
-                onTap: () {
-                  Navigator.pushNamed(context, Data_User.id);
-                }),
+              ListTile(
+                  title: Text('User Page'),
+                  onTap: () {
+                    Navigator.pushNamed(context, Data_User.id);
+                  }),
             if (my_role == 'Customer')
               ListTile(
                 title: Text('Orders'),
@@ -170,7 +170,10 @@ class _HomePageState extends State<HomePage> {
                   Navigator.pushNamed(context, User_Cart.id);
                 },
               ),
-            if (my_role == 'User' || my_role == 'Customer' || my_role == 'Employee' || my_role == 'Brand Ambassador')
+            if (my_role == 'User' ||
+                my_role == 'Customer' ||
+                my_role == 'Employee' ||
+                my_role == 'Brand Ambassador')
               ListTile(
                 title: Text('Live Help'),
                 onTap: () {
@@ -198,7 +201,6 @@ class _HomePageState extends State<HomePage> {
                   Navigator.pushNamed(context, Brand_Ambassador.id);
                 },
               ),
-
             if (my_role == 'Admin')
               ListTile(
                 title: Text('Delete Account'),
@@ -231,7 +233,10 @@ class _HomePageState extends State<HomePage> {
                   Navigator.pushNamed(context, Delete_Brand_Ambassador.id);
                 },
               ),
-            if (my_role == 'Admin' || my_role == 'Customer' || my_role == 'Employee' || my_role == 'Brand Ambassador')
+            if (my_role == 'Admin' ||
+                my_role == 'Customer' ||
+                my_role == 'Employee' ||
+                my_role == 'Brand Ambassador')
               ListTile(
                 title: Text('Logout'),
                 onTap: () {
@@ -295,7 +300,8 @@ class _HomePageState extends State<HomePage> {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      title: Text('Enter a value'),
+                                      title: Text(
+                                          'Please Enter Your Maximum Price'),
                                       content: TextField(
                                         onChanged: (value) {
                                           price = value;
@@ -327,7 +333,6 @@ class _HomePageState extends State<HomePage> {
                                   },
                                 );
                               },
-
                               child: Image.asset(
                                 'assets/icons/cheap.png',
                                 color: AppColor.secondary,
@@ -472,7 +477,9 @@ class _HomePageState extends State<HomePage> {
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) => Product(
-                                                productUrl: items[index].Link.toString(),
+                                                productUrl: items[index]
+                                                    .Link
+                                                    .toString(),
                                               ),
                                             ),
                                           );
@@ -510,7 +517,8 @@ class _HomePageState extends State<HomePage> {
                                     Padding(
                                       padding:
                                           EdgeInsets.symmetric(horizontal: 8),
-                                      child: Text( '\$ ${items[index].Full_prices}',
+                                      child: Text(
+                                        '\$ ${items[index].Full_prices}',
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
@@ -542,7 +550,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<List<All_Data>> readFirestoreData() async {
     final QuerySnapshot snapshot =
-    await FirebaseFirestore.instance.collection('All Data').get();
+        await FirebaseFirestore.instance.collection('All Data').get();
     return snapshot.docs
         .map((doc) => All_Data.fromJson(doc.data() as Map<String, dynamic>))
         .toList();

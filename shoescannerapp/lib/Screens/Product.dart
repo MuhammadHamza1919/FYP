@@ -249,7 +249,7 @@ class _ProductState extends State<Product> {
                         itemCount: data.length,
                         itemBuilder: (context, index) {
                           final product = data[index];
-                          if (product.Type != productData.Type) {
+                          if (product.Sp_Filter != productData.Sp_Filter || product.Type != productData.Type || product.Gender != productData.Gender) {
                             return SizedBox.shrink(); // Skip items with different types
                           }
                           if (product.Link == widget.productUrl) {
